@@ -1,27 +1,24 @@
-from flat_iterator import FlatListIterator
+import types
 from flat_gen import flat_list_gen
 
 
-def run():
-    nested_list = [
-        ['a', ['list', 1, ['new_list']], 'b', 'c'],
+def test_2():
+    list_of_lists_1 = [
+        ['a', 'b', 'c'],
         ['d', 'e', 'f', 'h', False],
-        [1, 2, None, ['deep_list', 333, ['again_list', [555]]]],
-        12
+        [1, 2, None]
     ]
-    print('[ITERATOR ELEMENTS]:')
-    for i in FlatListIterator(nested_list):
-        print(i)
-    print()
-    print('[GENERATOR ELEMENTS]:')
-    for i in flat_list_gen(nested_list):
-        print(i)
-    flat_list_1 = [i for i in FlatListIterator(nested_list)]
-    flat_list_2 = [i for i in flat_list_gen(nested_list)]
-    print()
-    print('[FROM ITERATOR]:', flat_list_1)
-    print('[FROM GENERATOR]:', flat_list_2)
+
+    for flat_iterator_item, check_item in zip(
+            flat_list_gen(list_of_lists_1),
+            ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None]
+    ):
+        assert flat_iterator_item == check_item
+
+    assert list(flat_list_gen(list_of_lists_1)) == ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None]
+
+    assert isinstance(flat_list_gen(list_of_lists_1), types.GeneratorType)
 
 
 if __name__ == '__main__':
-    run()
+    test_2()
